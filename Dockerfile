@@ -1,15 +1,14 @@
 FROM ubuntu:20.04
 
 RUN apt-get update
+RUN apt update
+RUN apt -y upgrade
+RUN apt install -y openjdk-11-jre
 RUN apt-get -y install make
 RUN apt-get -y install curl
 RUN apt-get -y install gpg
 RUN apt-get -y install git
 RUN apt-get -y install gcc
-
-RUN apt update
-RUN apt -y upgrade
-RUN apt install -y openjdk-11-jre
 
 COPY gbdk ./gbdk
 COPY gbt-player ./gbt-player
@@ -34,7 +33,7 @@ ENV GBT_SOURCE_FILES "/gbt-player/gbt_player_bank1.s /gbt-player/gbt_player.s"
 
 ENV GITHUB_PAT ""
 CMD git clone ${REPO} copydir \
-&& cd copydir && make && cd ~ \
+&& cd copydir && make \
 && echo ${GITHUB_PAT} | gh auth login --with-token \
-&& gh release create ${RELEASE_NAME} -t "${RELEASE_TITLE}" -n "${RELEASE_NOTES}" copydir/build/game.gb
+&& gh release create ${RELEASE_NAME} -t "${RELEASE_TITLE}" -n "${RELEASE_NOTES}" build/game.gb
 
